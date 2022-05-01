@@ -8,14 +8,15 @@ import (
 )
 //Struct, simlar to DTO, information to be displayed in our HTML file
 type Welcome struct {
-	Name string
+	FirstName string
+	LastName string
 	Time string
 }
 //Go application entrypoint
 func main() {
 	//Instantiate a Welcome struct obj & pass in some rand info.
 	//get name of the uer as a query pram from the url
-	welcome := Welcome{"No name", time.Now().Format(time.Stamp)}
+	welcome := Welcome{"No first name", "No last Name", time.Now().Format(time.Stamp)}
 
 	//We tell Go where it can find our html file. We as Go to parse the html file.
 
@@ -37,8 +38,11 @@ func main() {
 	//Method takes in the url path / and a fucction that takes in a reponse writeer, and a http request.
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request){
 		//Takes the name from the URL query. ie if name is Barb then, will set welcome.Name to Martin (from our struct)
-		if name := r.FormValue("name"); name != "" {
-			welcome.Name = name;
+		if firstname := r.FormValue("firstname"); firstname != "" {
+			welcome.FirstName = firstname;
+		}
+		if lastname := r.FormValue("lastname"); lastname != "" {
+			welcome.LastName = lastname;
 		}
 		//If errors show an internal server error message.
 		if err := templates.ExecuteTemplate(w, "welcome-template.html", welcome); err != nil {
